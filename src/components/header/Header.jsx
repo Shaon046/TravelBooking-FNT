@@ -15,7 +15,7 @@ import {
   faPerson,
 } from "@fortawesome/free-solid-svg-icons";
 
-const Header = () => {
+const Header = ({type}) => {
   const [openDate, setOpenDate] = useState(false);
 
   const [date, setDate] = useState([
@@ -33,9 +33,25 @@ const Header = () => {
     room: 1,
   });
 
+
+
+  const handleOption = (name, operation) => {
+    setOptions((prev) => {
+      return {
+        ...prev,
+        [name]: operation === "i" ? options[name] + 1 : options[name] - 1,
+      };
+    });
+  }
+
+
+
   return (
     <div className="header">
-      <div className="headerContainer">
+
+
+      
+      <div className={type==="list"?  "headerContainer listMode":  "headerContainer"}>
         <div className="headerList">
           <div className="headerListItem active">
             <FontAwesomeIcon icon={faBed} />
@@ -58,7 +74,11 @@ const Header = () => {
             <span>Airport taxis</span>
           </div>
         </div>
-        <h1 className="headerTitle">A lifetime of discounts? It's Genius.</h1>
+
+        
+
+        
+     { type!=="list" &&<div>  <h1 className="headerTitle">A lifetime of discounts? It's Genius.</h1>
         <p className="headerDesc">
           Get rewarded for your travels – unlock instant savings of 10% or more
           with a free Lamabooking account
@@ -99,22 +119,48 @@ const Header = () => {
               )}
             </div>
 
-            <div className="headerSearchItem">
+            <div className="headerSearchItem" >
               <FontAwesomeIcon icon={faPerson} />
-              <span className="headerSearchText">
+              <span className="headerSearchText" onClick={()=>setOpenOptions(!openOptions)}>
                 {`${options.adult} adult ${options.children} children ${options.room} room`}
-                <div className="options">
+
+                {openOptions && <div className="options">
                   <div className="optionItem">
                     <span className="optionText">Adult</span>
-                    <button className="optionCounterButton">-</button>
+                    <div className="optionCounter">
+                      <button className="optionCounterButton" onClick={()=>handleOption("adult","d")}
+                      disabled={options.adult<=0}>-</button>
+                      <span className="optonCounterNumber">{options.adult}</span>
+                      <button className="optionCounterButton" onClick={()=>handleOption("adult","i")}>+</button>
+                    </div>
                   </div>
-                </div>
+                  <div className="optionItem">
+                    <span className="optionText">children</span>
+
+                    <div className="optionCounter">
+                      <button className="optionCounterButton" onClick={()=>handleOption("children","d")} disabled={options.children<=0}>-</button>
+                      <span className="optonCounterNumber">{options.children}</span>
+                      <button className="optionCounterButton"  onClick={()=>handleOption("children","i")}>+</button>
+                    </div>
+                  </div>
+                  <div className="optionItem">
+                    <span className="optionText">room</span>
+
+                    <div className="optionCounter">
+                      <button className="optionCounterButton" onClick={()=>handleOption("room","d")} disabled={options.room<=0}>-</ button>
+                      <span className="optonCounterNumber">{options.room}</span>
+                      <button className="optionCounterButton" onClick={()=>handleOption("room","i")}>+</button>
+                    </div>
+                  </div>
+                </div>}
+
+
               </span>
 
               <button className="headerBtn">Search</button>
             </div>
           </div>
-        </div>
+        </div>  </div>}
       </div>
     </div>
   );
